@@ -34,7 +34,16 @@ done
 cd ~
 mkdir -p ~/VALIDATOR_KEYS
 
+for i in $(seq 0 14); do
+  ~/./elrond-utils/keygenerator
+  zip ~/elrond-nodes/node-$i.zip ~/validatorKey.pem
+  mv ~/elrond-nodes/node-$i.zip $HOME/VALIDATOR_KEYS/
+  mv validatorKey.pem ~/elrond-nodes/node-$i/config/
+done
 
+~/mx-chain-scripts/script.sh github_pull
+~/mx-chain-scripts/script.sh upgrade
+~/mx-chain-scripts/script.sh start
 
 echo "Configuration de base terminée"
 echo "Résumé de configuration :"
