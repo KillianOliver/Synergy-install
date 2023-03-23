@@ -34,12 +34,7 @@ done
 cd ~
 mkdir -p ~/VALIDATOR_KEYS
 
-for i in $(seq 1 $nbvalidator); do
-  ./elrond-utils/keygenerator
-  zip node-$i.zip validatorKey.pem
-  mv node-$i.zip $HOME/VALIDATOR_KEYS/
-  mv validatorKey.pem $HOME/elrond-nodes/node-$i/config/
-done
+
 
 echo "Configuration de base terminée"
 echo "Résumé de configuration :"
