@@ -30,7 +30,7 @@ for i in $(seq 1 $nbvalidator); do
   echo "Synergy-$i" >> ~/mx-chain-scripts/validatorsinstall
 done
 
-~/mx-chain-scripts/script.sh install < validatorsinstall
+~/mx-chain-scripts/script.sh install < ~/mx-chain-scripts/validatorsinstall
 cd ~
 mkdir -p ~/VALIDATOR_KEYS
 
