@@ -25,8 +25,9 @@ cd ~/mx-chain-scripts/config
 sudo sed -i "s/22/$port/g" ~/mx-chain-scripts/config/variables.cfg
 sudo sed -i "s/ENVIRONMENT=\"\"/ENVIRONMENT=\"$typeofvalidator\"/" ~/mx-chain-scripts/config/variables.cfg
 
+echo "$nbvalidator" >> ~/mx-chain-scripts/validatorsinstall
 for i in $(seq 1 $nbvalidator); do
-  echo "Synergy-$i" >> validatorsinstall
+  echo "Synergy-$i" >> ~/mx-chain-scripts/validatorsinstall
 done
 
 ~/mx-chain-scripts/script.sh install < validatorsinstall
