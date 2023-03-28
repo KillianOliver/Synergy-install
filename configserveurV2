@@ -1,7 +1,7 @@
 #!/bin/bash
-# Script de configuration initiale des validateurs Synergy
+# Script de configuration initiale des validateurs Split
 
-echo "||| Configuration du serveur Synergy |||"
+echo "||| Configuration du serveur Split |||"
 
 read -p "Quel port souhaitez-vous utiliser pour vos noeud(s) validateur(s) (entre 49152 et 65535) ? " port
 read -p "Choix du réseau d'installation (mainnet, devnet, testnet) ? " typeofvalidator
@@ -27,7 +27,7 @@ sudo sed -i "s/ENVIRONMENT=\"\"/ENVIRONMENT=\"$typeofvalidator\"/" ~/mx-chain-sc
 
 echo "$nbvalidator" >> ~/mx-chain-scripts/validatorsinstall
 for i in $(seq 1 $nbvalidator); do
-  echo "Synergy-$i" >> ~/mx-chain-scripts/validatorsinstall
+  echo "Split-$i" >> ~/mx-chain-scripts/validatorsinstall
 done
 
 ~/mx-chain-scripts/script.sh install < ~/mx-chain-scripts/validatorsinstall
