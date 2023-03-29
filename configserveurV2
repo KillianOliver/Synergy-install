@@ -22,7 +22,10 @@ cd ~
 git clone https://github.com/multiversx/mx-chain-scripts
 cd ~/mx-chain-scripts/config
 
+$(id -un)
 sudo sed -i "s/22/$port/g" ~/mx-chain-scripts/config/variables.cfg
+sudo sed -i "s/CUSTOM_HOME=\"\"/CUSTOM_HOME=\"/home/$(id -un)\"/" ~/mx-chain-scripts/config/variables.cfg
+sudo sed -i "s/CUSTOM_USER=\"\"/CUSTOM_USER=\"$(id -un)\"/" ~/mx-chain-scripts/config/variables.cfg
 sudo sed -i "s/ENVIRONMENT=\"\"/ENVIRONMENT=\"$typeofvalidator\"/" ~/mx-chain-scripts/config/variables.cfg
 
 echo "$nbvalidator" >> ~/mx-chain-scripts/validatorsinstall
