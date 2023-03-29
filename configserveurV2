@@ -34,7 +34,7 @@ done
 cd ~
 mkdir -p ~/VALIDATOR_KEYS
 
-for i in $(seq 0 14); do
+for i in $(seq 0 $nbvalidator); do
   ~/./elrond-utils/keygenerator
   zip ~/elrond-nodes/node-$i.zip ~/validatorKey.pem
   mv ~/elrond-nodes/node-$i.zip $HOME/VALIDATOR_KEYS/
