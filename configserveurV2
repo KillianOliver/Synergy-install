@@ -1,60 +1,47 @@
 #!/bin/bash
-# Script de configuration initiale des validateurs Split
-
 echo "||| Configuration du serveur Split |||"
+nbValidator=20
+network="devnet"
+port="57243"
 
-read -p "Quel port souhaitez-vous utiliser pour vos noeud(s) validateur(s) (entre 49152 et 65535) ? " port
-read -p "Choix du réseau d'installation (mainnet, devnet, testnet) ? " typeofvalidator
-read -p "Nombre de validateur à installer ? " nbvalidator
-
-sudo sed -i "s/#Port 22/Port $port/" /etc/ssh/sshd_config
+sudo sed -i "s/#Port 22/Port 57243/" /etc/ssh/sshd_config
 sudo sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
 yes | sudo ufw reset
 sudo sed -i 's/IPV6=yes/IPV6=no/' /etc/default/ufw
-sudo ufw allow $port
+sudo ufw allow 57243
 sudo ufw allow 37373:38383/tcp
 yes | sudo ufw enable
 sudo service ssh restart
 sudo apt update && sudo apt upgrade -y
 sudo timedatectl set-timezone Europe/Paris
 sudo apt install -y git-all zip unzip
-cd ~
-git clone https://github.com/multiversx/mx-chain-scripts
-cd ~/mx-chain-scripts/config
 
-$(id -un)
+cd ~ && git clone https://github.com/multiversx/mx-chain-scripts && cd mx-chain-scripts/config
+
 sudo sed -i "s/22/$port/g" ~/mx-chain-scripts/config/variables.cfg
 sudo sed -i "s/CUSTOM_HOME=\"\"/CUSTOM_HOME=\"/home/$(id -un)\"/" ~/mx-chain-scripts/config/variables.cfg
 sudo sed -i "s/CUSTOM_USER=\"\"/CUSTOM_USER=\"$(id -un)\"/" ~/mx-chain-scripts/config/variables.cfg
-sudo sed -i "s/ENVIRONMENT=\"\"/ENVIRONMENT=\"$typeofvalidator\"/" ~/mx-chain-scripts/config/variables.cfg
+sudo sed -i "s/ENVIRONMENT=\"\"/ENVIRONMENT=\"$network\"/" ~/mx-chain-scripts/config/variables.cfg
 
-echo "$nbvalidator" >> ~/mx-chain-scripts/validatorsinstall
-for i in $(seq 1 $nbvalidator); do
-  echo "Split-$i" >> ~/mx-chain-scripts/validatorsinstall
-done
-
-~/mx-chain-scripts/script.sh install < ~/mx-chain-scripts/validatorsinstall
+validators_list=$(printf "%s\n" "$nbValidator"; for i in $(seq 1 $nbValidator); do printf "Split-%02d\n" "$i"; done)
+echo "$validators_list" | ~/mx-chain-scripts/script.sh install
 cd ~
+
 mkdir -p ~/VALIDATOR_KEYS
 
-for i in $(seq 0 $nbvalidator); do
+for i in $(seq 0 $nbValidator); do
   ~/./elrond-utils/keygenerator
   zip ~/elrond-nodes/node-$i.zip ~/validatorKey.pem
   mv ~/elrond-nodes/node-$i.zip $HOME/VALIDATOR_KEYS/
   mv validatorKey.pem ~/elrond-nodes/node-$i/config/
 done
 
-~/mx-chain-scripts/script.sh github_pull
-~/mx-chain-scripts/script.sh upgrade
-~/mx-chain-scripts/script.sh start
-
-echo "Configuration de base terminée"
+echo "Configuration terminée"
 echo "Résumé de configuration :"
 echo "Port : $port"
-echo "Réseau : $typeofvalidator"
-echo "Nombre de noeud installé : $nbvalidator"
+echo "Réseau : $network"
+echo "Nombre de noeud installé : $nbValidator"
 echo "Liste des noeuds :"
-for i in $(seq 1 $nbvalidator); do
-  printf "Synergy-%03d\n" $i
+for i in $(seq 1 $nbValidator); do
+  printf "Split-%03d\n" $i
 done
-echo "Reboot du serveur en cours.."
